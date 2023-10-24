@@ -12,21 +12,15 @@ include_once 'bd/conexion.php';
 $objeto = new conn();
 
 $conexion = $objeto->connect();
-$usuario = $_SESSION['s_nombre'];
-$fecha = (isset($_GET['fechasys'])) ? $_GET['fechasys'] : '';
-$tokenid = md5($_SESSION['s_usuario']);
 
-
-
+//$usuario = $_SESSION['s_nombre'];
+//$fecha = (isset($_GET['fechasys'])) ? $_GET['fechasys'] : '';
+//$tokenid = md5($_SESSION['s_usuario']);
 
 $consulta = "SELECT * FROM vcxp WHERE estado_cxp = 1 ORDER BY folio_cxp";
-
- 
-
 $resultado = $conexion->prepare($consulta);
 $resultado->execute();
 $data = $resultado->fetchAll(PDO::FETCH_ASSOC);
-
 
 $message = "";
 

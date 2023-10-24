@@ -26,7 +26,7 @@ include_once "templates/navegacion.php";
   </section>
   <section>
     <div class="container-fluid">
-     
+
       <div class="jumbotron bg-white">
         <div class="row justify-content-center">
           <div class="col-lg-12 text-center">
