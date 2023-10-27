@@ -1,6 +1,6 @@
 $(document).ready(function () {
     var id_prov, opcion;
-    
+
     //opcion = 4;
 
     tablaProv = $("#tablaProveedor").DataTable({
@@ -37,56 +37,9 @@ $(document).ready(function () {
     });
 
     $("#btnNuevo").click(function () {
-         fecha = $('<?php echo $fecha; ?>').val();
-         usuario = $('<?php echo $s_nombre; ?>').val();
-         tokenid = $('<?php echo $usuario; ?>').val();
-         opcion = 1;
 
-        if (
-            fecha.length == 0 &&
-            tokenid.length == 0 &&
-            usuario.length == 0
-        ) {
-            $.ajax({
-                type: 'POST',
-                url: 'bd/crudorden.php',
-                dataType: 'json',
-                data: {
-                    fecha: fecha,
-                    tokeind: tokenid,
-                    usuario: usuario,
+        window.location.href = 'detallecxp.php'
 
-                    opcion: opcion
-                },
-
-                success: function (res) {
-                    if (res == 0) {
-                        Swal.fire({
-                            title: 'Error al Apartar Folio',
-                            text: 'No se puedo apartar el folio',
-                            icon: 'error',
-                        })
-                    } else {
-                        Swal.fire({
-                            title: 'Folio Apartado',
-                            text: 'Capture los items',
-                            icon: 'success',
-                        })
-
-                        window.setTimeout(function () {
-                            window.location.href = 'detallecxp.php'
-                        }, 1500)
-                    }
-                },
-            })
-        } else {
-            Swal.fire({
-                title: 'Datos Faltantes',
-                text: 'Debe ingresar todos los datos',
-                icon: 'warning',
-            })
-            return false
-        }
 
     })
 

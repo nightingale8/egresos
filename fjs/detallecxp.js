@@ -16,13 +16,13 @@ $(document).ready(function () {
         return columnas
     }
 
-    tablaC = $('#tablaC').DataTable({
+    tablaC = $('#tabla2').DataTable({
         columnDefs: [
             {
                 targets: -1,
                 data: null,
                 defaultContent:
-                    "<div class='text-center'><div class='btn-group'><button class='btn btn-sm btn-success btnSelCliente'><i class='fas fa-hand-pointer'></i></button></div></div>",
+                    "<div class='text-center'><div class='btn-group'><button class='btn btn-sm btn-success btnSelprov'><i class='fas fa-hand-pointer'></i></button></div></div>",
             },
         ],
 
@@ -158,8 +158,7 @@ $(document).ready(function () {
     $(document).on('click', '#bproveedor', function () {
         $('.modal-header').css('background-color', '#007bff')
         $('.modal-header').css('color', 'white')
-
-        $('#modalProspecto').modal('show')
+        $('#modalProveedor').modal('show')
     })
 
     $(document).on('click', '#bproveedorplus', function () {
@@ -170,30 +169,30 @@ $(document).ready(function () {
         window.location.href = 'cntaproyecto.php'
     })
 
-    $(document).on('click', '#bproyecto', function () {
-        $('.modal-header').css('background-color', '#007bff')
-        $('.modal-header').css('color', 'white')
+    /*    $(document).on('click', '#bproyecto', function () {
+            $('.modal-header').css('background-color', '#007bff')
+            $('.modal-header').css('color', 'white')
+    
+            $('#modalProyecto').modal('show')
+    
+            $('#claveconcepto').val('')
+            $('#concepto').val('')
+            $('#id_umedida').val('')
+            $('#usomat').val('')
+            $('#nom_umedida').val('')
+            $('#bmaterial').prop('disabled', true)
+            $('#clavemat').val('')
+            $('#material').val('')
+            $('#clave').val('')
+            $('#idprecio').val('')
+            $('#unidad').val('')
+    
+            $('#precio').val('')
+            $('#cantidad').val('')
+            $('#cantidad').prop('disabled', true)
+        }) */
 
-        $('#modalProyecto').modal('show')
-
-        $('#claveconcepto').val('')
-        $('#concepto').val('')
-        $('#id_umedida').val('')
-        $('#usomat').val('')
-        $('#nom_umedida').val('')
-        $('#bmaterial').prop('disabled', true)
-        $('#clavemat').val('')
-        $('#material').val('')
-        $('#clave').val('')
-        $('#idprecio').val('')
-        $('#unidad').val('')
-
-        $('#precio').val('')
-        $('#cantidad').val('')
-        $('#cantidad').prop('disabled', true)
-    })
-
-    $(document).on('click', '.btnSelCliente', function () {
+    $(document).on('click', '.btnSelprov', function () {
         fila = $(this).closest('tr')
 
         idprov = fila.find('td:eq(0)').text()
@@ -203,7 +202,7 @@ $(document).ready(function () {
 
         $('#id_prov').val(idprov)
         $('#nombre').val(nomprov)
-        $('#modalProspecto').modal('hide')
+        $('#modalProveedor').modal('hide')
     })
 
     $(document).on('click', '#btnGuardar', function () {
@@ -270,14 +269,31 @@ $(document).ready(function () {
         }
     })
 
-    $(document).on('click', '.btnSelConcepto', function () {
-        fila = $(this).closest('tr')
-        idpartida = fila.find('td:eq(0)').text()
-        partida = fila.find('td:eq(2)').text()
-        $('#id_proy').val(idpartida)
-        $('#proyecto').val(partida)
-        $('#modalProyecto').modal('hide')
-    })
+    /* $(document).on('click', '.btnSelConcepto', function () {
+         fila = $(this).closest('tr')
+         id_item = fila.find('td:eq(0)').text()
+         concepto = fila.find('td:eq(1)').text()
+         unidad = fila.find('td:eq(2)').text()
+         precio = fila.find('td:eq(3)').text()
+ 
+         $('#idconcepto').val(id_item)
+         $('#nomconcepto').val(concepto)
+         $('#costou').val(precio)
+         $('#unidadm').val(unidad)
+ 
+ 
+         $('#unidadm').prop('disabled', true)
+         $('#costou').prop('disabled', true)
+         $('#importe').prop('disabled', true)
+         $('#gimporte').prop('disabled', true)
+         $('#cantidad').prop('disabled', false)
+         $('#desc').prop('disabled', false)
+ 
+ 
+ 
+         $('#modalDes').modal('hide')
+         obtImport();
+     }) */
 
     //BOTON BUSCAR DESECHABLE
     $(document).on('click', '#btnInsumodes', function () {
@@ -288,21 +304,68 @@ $(document).ready(function () {
     $(document).on('click', '.btnSelDesechable', function () {
         fila = $(this).closest('tr')
         idconcepto = fila.find('td:eq(0)').text()
-        clave = fila.find('td:eq(1)').text()
-        concepto = fila.find('td:eq(2)').text()
-        unidad = fila.find('td:eq(3)').text()
+        concepto = fila.find('td:eq(1)').text()
+        unidad = fila.find('td:eq(2)').text()
+        precio = fila.find('td:eq(3)').text()
 
         /*
          */
         $('#idconcepto').val(idconcepto)
-        $('#unidadm').val(unidad)
         $('#nomconcepto').val(concepto)
-        $('#claveconcepto').val(clave)
-        $('#costou').prop('disabled', false)
+        $('#unidadm').val(unidad)
+        $('#costou').val(precio)
+
+
+
         $('#cantidadconcepto').prop('disabled', false)
 
         $('#modalDes').modal('hide')
+
     })
+
+
+    /*$(document).on('input', '#costou,#cantidad,#importe,#desc', function () {
+         precio = parseFloat($('#costou').val())
+         cantidad = parseInt($('#cantidadconcepto').val())
+         desc = parseInt($('#desc').val())
+         importe = precio * cantidad;
+        $('#importe').val(importe.toFixed(2));
+    
+         gimporte = importe - (importe * (desc / 100));
+        $('#subtotal').val(gimporte.toFixed(2));
+    })*/
+
+    //la función se ejecutará cada vez que se suelte una tecla en alguno de estos campos de entrada
+    $(document).ready(function () {
+        $('#cantidadconcepto,#desc').on('keyup', function () {
+            calcularImporteYSubtotal();
+        });
+    });
+    //la función se ejecutará cada vez que el valor del campo costou cambie
+    // ya sea por una selección de item o cualquier otra actualización programática del valor
+    $(document).ready(function () {
+        $('#costou').on('change', function () {
+            calcularImporteYSubtotal();
+        });
+    });
+    //realiza los calculos de los valores obtenidos de los campos de texto
+    //y el resultado los coloca en el campo de texto correspondiente
+    function calcularImporteYSubtotal() {
+
+        var precio = parseFloat($('#costou').val()) || 0
+        var cantidad = parseInt($('#cantidadconcepto').val()) || 0
+        var desc = parseInt($('#desc').val()) || 0
+        var importe = precio * cantidad;
+        $('#importe').val(importe);
+
+        var gimporte = importe - (importe * (desc / 100));
+        $('#subtotal').val(gimporte);
+        console.log(precio)
+        console.log(cantidad)
+        console.log(desc)
+        console.log(importe)
+        console.log(gimporte)
+    }
 
     //BOTON LIMPIAR DESECHABLE
     $(document).on('click', '#btlimpiarides', function () {

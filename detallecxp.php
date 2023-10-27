@@ -14,37 +14,37 @@ $conexion = $objeto->connect();
 $usuario = (isset($_GET['nameuser'])) ? $_GET['nameuser'] : '';
 $tokenid = md5($_SESSION['s_usuario']);
 
-if ($folio != ""){
+if ($folio != "") {
     $opcion = 2;
-$consultatmp = "SELECT * FROM cxptmp WHERE foliotmp='$folio'";
-$resultadotmp = $conexion->prepare($consultatmp);
-$resultadotmp->execute();
-$datatmp = $resultadotmp->fetchAll(PDO::FETCH_ASSOC);
+    $consultatmp = "SELECT * FROM cxptmp WHERE foliotmp='$folio'";
+    $resultadotmp = $conexion->prepare($consultatmp);
+    $resultadotmp->execute();
+    $datatmp = $resultadotmp->fetchAll(PDO::FETCH_ASSOC);
 
-foreach ($datatmp as $dt) {
-    $folio = $dt['foliotmp'];
+    foreach ($datatmp as $dt) {
+        $folio = $dt['foliotmp'];
 
-    $fecha = $dt['fecha'];
-    $id_prov = $dt['id_prov'];
-    $proveedor = $dt['nombre'];
-    $id_item = $dt['id_item'];
-    $concepto = $dt['descripcion'];
-    $total = $dt['gtotal'];
-}
+        $fecha = $dt['fecha'];
+        $id_prov = $dt['id_prov'];
+        $proveedor = $dt['nombre'];
+        $id_item = $dt['id_item'];
+        $concepto = $dt['descripcion'];
+        $total = $dt['gtotal'];
+    }
 
-$message = "";
+    $message = "";
 } else {
-        //BUSCAR CUENTA ABIERTA
+    //BUSCAR CUENTA ABIERTA
 
 
-        $consultatmp = "SELECT * FROM cxptmp WHERE tokenid='$tokenid' and activo='0' ORDER BY foliotmp DESC LIMIT 1";
-        $resultadotmp = $conexion->prepare($consultatmp);
-        $resultadotmp->execute();
-        if ($resultadotmp->rowCount() >= 1) {
-            $datatmp = $resultadotmp->fetchAll(PDO::FETCH_ASSOC);
-        } else {
+    $consultatmp = "SELECT * FROM cxptmp WHERE tokenid='$tokenid' and activo='0' ORDER BY foliotmp DESC LIMIT 1";
+    $resultadotmp = $conexion->prepare($consultatmp);
+    $resultadotmp->execute();
+    if ($resultadotmp->rowCount() >= 1) {
+        $datatmp = $resultadotmp->fetchAll(PDO::FETCH_ASSOC);
+    } else {
 
-            // INSERTAR FOLIO NUEVO
+        // INSERTAR FOLIO NUEVO
 
         $fecha = date('Y-m-d');
         $consultatmp = "INSERT INTO cxptmp (tokenid,fecha,total,activo) VALUES('$tokenid','$fecha','0','0')";
@@ -69,7 +69,6 @@ $message = "";
         $concepto = "";
         $total =  $dt['gtotal'];
     }
-    
 }
 $consultap = "SELECT * FROM proveedor WHERE estado_prov=1 ORDER BY id_prov";
 $resultadop = $conexion->prepare($consultap);
@@ -186,7 +185,7 @@ $datap = $resultadop->fetchAll(PDO::FETCH_ASSOC);
             </div>
 
             <div class="card-body">
-        
+
                 <div class="row">
                     <div class="col-lg-12">
                         <?php if ($opcion == 1) { ?>
@@ -199,7 +198,7 @@ $datap = $resultadop->fetchAll(PDO::FETCH_ASSOC);
                 <br>
 
 
-            <!-- FORM DATOS PROVEDOR-->
+                <!-- FORM DATOS PROVEDOR-->
                 <form id="formDatos" action="" method="POST">
 
 
@@ -209,7 +208,7 @@ $datap = $resultadop->fetchAll(PDO::FETCH_ASSOC);
 
                             <div class="card-header bg-gradient-secondary " style="margin:0px;padding:8px">
 
-                                <h1 class="card-title ">CUENTA POR PAGAR</h1>
+                                <h1 class="card-title ">DETALLE DE LA COMPRA</h1>
                             </div>
 
                             <div class="card-body" style="margin:0px;padding:1px;">
@@ -236,16 +235,16 @@ $datap = $resultadop->fetchAll(PDO::FETCH_ASSOC);
                                     <div class="col-sm-2"></div>
 
 
-                                    <div class="col-sm-8">
+                                    <div class="col-sm-4">
                                         <div class="form-group">
                                             <input type="hidden" class="form-control" name="tokenid" id="tokenid" value="<?php echo $tokenid; ?>">
                                             <input type="hidden" class="form-control" name="opcion" id="opcion" value="<?php echo $opcion; ?>">
-                                            <input type="text" class="form-control" name="id_prov" id="id_prov" value="<?php echo $id_prov; ?>" disabled>
+                                            <input type="hidden" class="form-control" name="id_prov" id="id_prov" value="<?php echo $id_prov; ?>" disabled>
                                             <label for="nombre" class="col-form-label">Proveedor:</label>
 
                                             <div class="input-group input-group-sm">
 
-                                                <input type="text" class="form-control" name="nombre" id="nombre" value="<?php //echo $proveedor; ?>" disabled>
+                                                <input type="text" class="form-control" name="nombre" id="nombre" value="<?php echo $proveedor; ?>" disabled>
                                                 <?php if ($opcion == 1) { ?>
                                                     <span class="input-group-append">
                                                         <button id="bproveedor" type="button" class="btn btn-primary "><i class="fas fa-search"></i></button>
@@ -255,27 +254,28 @@ $datap = $resultadop->fetchAll(PDO::FETCH_ASSOC);
                                             </div>
                                         </div>
                                     </div>
-
-
-
-
-
-
-                                </div>
-
-                                <div class=" row justify-content-sm-center">
-                                    <div class="col-sm-8">
+                                    <div class="col-sm-4">
 
                                         <div class="form-group">
                                             <label for="concepto" class="col-form-label">Concepto:</label>
-                                            <textarea rows="2" class="form-control" name="concepto" id="concepto"><?php //echo $concepto; ?></textarea>
+                                            <textarea rows="1" class="form-control" name="concepto" id="concepto"><?php //echo $concepto; 
+                                                                                                                    ?></textarea>
                                         </div>
 
                                     </div>
-                <!-- TERMINA FORM DATOS PROVEDOR -->
+
+
+
 
 
                                 </div>
+
+
+
+                                <!-- TERMINA FORM DATOS PROVEDOR -->
+
+
+
                                 <div class="row justify-content-sm-center m-auto" style="padding:5px 0px;margin-bottom:5px">
                                     <div class="col-sm-10">
                                         <div class="card ">
@@ -285,13 +285,13 @@ $datap = $resultadop->fetchAll(PDO::FETCH_ASSOC);
 
 
                                                 </div>
-                                                <h1 class="card-title text-light">DETALLE DE CONCEPTO</h1>
+                                                <h1 class="card-title text-light">DETALLE DEL ITEM</h1>
                                                 <div class="card-tools" style="margin:0px;padding:0px;">
 
 
                                                 </div>
                                             </div>
-                        <!-- INICIA AGREGAR CONCEPTO-->
+                                            <!-- INICIA AGREGAR CONCEPTO-->
                                             <div class="card-body" style="margin:0px;padding:3px;">
 
                                                 <div class="card card-widget collapsed-card " style="margin:2px;padding:5px;">
@@ -312,7 +312,7 @@ $datap = $resultadop->fetchAll(PDO::FETCH_ASSOC);
 
                                                                     <input type="hidden" class="form-control" name="idconcepto" id="idconcepto">
 
-                                                                    <input type="hidden" class="form-control" name="claveconcepto" id="claveconcepto">
+                                                                <!--    <input type="hidden" class="form-control" name="claveconcepto" id="claveconcepto"> -->
 
 
                                                                     <label for="nomconcepto" class="col-form-label">Concepto:</label>
@@ -326,7 +326,7 @@ $datap = $resultadop->fetchAll(PDO::FETCH_ASSOC);
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-3">
-                                                            <label for="unidadm" class="col-form-label">Unidad:</label>
+                                                                <label for="unidadm" class="col-form-label">Unidad:</label>
                                                                 <div class="input-group input-group-sm">
                                                                     <input type="text" class="form-control" name="unidadm" id="unidadm" disabled>
                                                                 </div>
@@ -337,58 +337,59 @@ $datap = $resultadop->fetchAll(PDO::FETCH_ASSOC);
                                                             <div class="col-lg-2">
                                                                 <label for="costou" class="col-form-label">Precio:</label>
                                                                 <div class="input-group input-group-sm">
-                                                                    <input type="text" class="form-control" name="costou" id="costou" oninput="obtImport();" disabled>
+                                                                    <input type="text" class="form-control" name="costou" id="costou"  disabled>
                                                                 </div>
                                                             </div>
 
                                                             <div class="col-lg-2">
-                                                                <label for="cantidad" class="col-form-label">Cantidad:</label>
+                                                                <label for="cantidadconcepto" class="col-form-label">Cantidad:</label>
                                                                 <div class="input-group input-group-sm">
-                                                                    <input type="text" class="form-control" name="cantidad" id="cantidad" oninput="obtImport();" >
+                                                                    <input type="text" class="form-control" name="cantidadconcepto" id="cantidadconcepto" >
                                                                 </div>
                                                             </div>
                                                         </div>
                                                         <div class="row justify-content-center">
-
-                                                        <div class="col-sm-3">
+                                                            <div class="col-sm-2"></div>
+                                                            <div class="col-sm-2">
                                                                 <div class="form-group">
                                                                     <label for="importe" class="col-form-label">Importe $:</label>
-                                                                        
-                                                                    <input type="text" class="form-control" name="importe" id="importe" oninput="obtGimport();" disabled  >
+
+                                                                    <input type="text" class="form-control" name="importe" id="importe"  disabled>
                                                                 </div>
                                                             </div>
-                                                            <div class="col-sm-3">
+                                                            <div class="col-sm-2">
                                                                 <div class="form-group">
                                                                     <label for="desc" class="col-form-label">Descuento:</label>
-                                                                    <input type="text" class="form-control" name="desc" id="desc" autocomplete="off" oninput="obtGimport();" >
+                                                                    <input  type="text" class="form-control" name="desc" id="desc" autocomplete="off" >
                                                                 </div>
                                                             </div>
 
-                                                            
-                                                            <div class="col-sm-3">
+
+                                                            <div class="col-sm-2">
                                                                 <div class="form-group">
                                                                     <label for="subtotal" class="col-form-label">Subtotal $:</label>
-                                                                        
-                                                                    <input type="text" class="form-control" name="subtotal" id="subtotal" disabled  >
+
+                                                                    <input type="text" class="form-control" name="subtotal" id="subtotal" disabled>
                                                                 </div>
                                                             </div>
 
-                                                            <div class="col-lg-6 justify-content-center">
-                                                                <label for="" class="col-form-label">Acciones:</label>
-                                                                <div class="input-group-append input-group-sm justify-content-center d-flex">
+                                                            <div class="col-lg-2 justify-content-center">
+                                                                <label for="acciones" class="col-form-label">Acciones:</label>
+                                                                <div class="">
                                                                     <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="Agregar Item">
                                                                         <button type="button" id="btnagregarides" name="btnagregarides" class="btn btn-sm bg-gradient-orange" value="btnGuardari"><i class="fas fa-plus-square"></i></button>
                                                                     </span>
-                                                                    
+
                                                                     <span class="d-inline-block" tabindex="1" data-toggle="tooltip" title="Limpiar">
                                                                         <button type="button" id="btlimpiarides" name="btlimpiarides" class="btn btn-sm bg-gradient-secondary" value="btnlimpiari"><i class="fas fa-brush"></i></button>
                                                                     </span>
                                                                 </div>
                                                             </div>
+                                                            <div class="col-sm-2"></div>
                                                         </div>
 
                                                     </div>
-                                                    
+
 
 
                                                 </div>
@@ -421,13 +422,13 @@ $datap = $resultadop->fetchAll(PDO::FETCH_ASSOC);
                                                                     ?>
                                                                         <tr>
                                                                             <td><?php echo $rowdet['id_reg'] ?></td>
-                                                                            
+
                                                                             <td><?php echo $rowdet['id_item'] ?></td>
                                                                             <td><?php echo $rowdet['descripcion'] ?></td>
                                                                             <td><?php echo $rowdet['cantidad'] ?></td>
                                                                             <td><?php echo $rowdet['tipo'] ?></td>
-                                                                            <td class="text-right"><?php echo number_format($rowdet['precio'],2) ?></td>
-                                                                            <td class="text-right"><?php echo number_format($rowdet['gimporte'],2) ?></td>
+                                                                            <td class="text-right"><?php echo number_format($rowdet['precio'], 2) ?></td>
+                                                                            <td class="text-right"><?php echo number_format($rowdet['gimporte'], 2) ?></td>
                                                                             <td></td>
                                                                         </tr>
                                                                     <?php
@@ -455,15 +456,36 @@ $datap = $resultadop->fetchAll(PDO::FETCH_ASSOC);
 
                                 <div class="row justify-content-sm-center" style="padding:5px 0px;margin-bottom:5px">
 
-                                    <div class="col-sm-8 ">
+                                <div class="col-sm-2">
+                                        <div class="form-group">
+                                            <label for="total" class="col-form-label">Total $:</label>
 
+                                            <input type="text" class="form-control" name="total" id="total" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-2">
+                                    <div class="form-group auto">
+                                            <label for="tipo" class="col-form-label">Facturado:</label>
+                                            <select class="form-control" name="tipo" id="tipo">
+                                        
+                                            <option id="1" value="1">Si</option>
+                                            <option id="0" value="0">No</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <div class="form-group">
+                                            <label for="iva" class="col-form-label">IVA $:</label>
 
+                                            <input type="text" class="form-control" name="iva" id="iva" disabled>
+                                        </div>
                                     </div>
 
-                                    
+
+
 
                                     <div class="col-sm-2 ">
-                                        <label for="total" class="col-form-label ">Total:</label>
+                                        <label for="total" class="col-form-label ">Total a pagar$:</label>
 
                                         <div class="input-group input-group-sm">
                                             <div class="input-group-prepend">
@@ -472,7 +494,7 @@ $datap = $resultadop->fetchAll(PDO::FETCH_ASSOC);
                                                 </span>
                                             </div>
 
-                                            <input type="text" class="form-control text-right" name="total" id="total" value="<?php echo number_format($total,2); ?>" onkeypress="return filterFloat(event,this);" disabled>
+                                            <input type="text" class="form-control text-right" name="total" id="total" value="<?php echo number_format($total, 2); ?>" onkeypress="return filterFloat(event,this);" disabled>
                                         </div>
 
                                     </div>
@@ -480,7 +502,7 @@ $datap = $resultadop->fetchAll(PDO::FETCH_ASSOC);
                             </div>
                         </div>
                     </div>
-                <!-- TERMINA AGREAR CONCEPTO-->
+                    <!-- TERMINA AGREAR CONCEPTO-->
                 </form>
 
             </div>
@@ -566,7 +588,7 @@ $datap = $resultadop->fetchAll(PDO::FETCH_ASSOC);
                                     $resultadoc->execute();
                                     $datades = $resultadoc->fetchAll(PDO::FETCH_ASSOC);;
                                     foreach ($datades as $datd) {
-                                        
+
                                     ?>
                                         <tr>
 
