@@ -5,32 +5,38 @@ $conexion = $objeto->connect();
 // Recepción de los datos enviados mediante POST desde el JS   
 //DATOS PARA TABLA DETALLE
 $folio = (isset($_POST['folio'])) ? $_POST['folio'] : '';
-$idcon = (isset($_POST['idconcepto'])) ? $_POST['idconcepto'] : '';
-$cantidad = (isset($_POST['cantidadconcepto'])) ? $_POST['cantidadconcepto'] : '';
+$idconcepto = (isset($_POST['idconcepto'])) ? $_POST['idconcepto'] : '';
 $concepto = (isset($_POST['nomconcepto'])) ? $_POST['nomconcepto'] : '';
 $unidad = (isset($_POST['unidadm'])) ? $_POST['unidadm'] : '';
-$costo = (isset($_POST['costou'])) ? $_POST['costou'] : '';
-$clave = (isset($_POST['claveconcepto'])) ? $_POST['claveconcepto'] : '';
-$subtotal = (isset($_POST['importe'])) ? $_POST['importe'] : '';
+$cantidad = (isset($_POST['cantidadconcepto'])) ? $_POST['cantidadconcepto'] : '';
+$precio = (isset($_POST['costou'])) ? $_POST['costou'] : '';
+$desc = (isset($_POST['desc'])) ? $_POST['desc'] : '';
+$importe = (isset($_POST['importe'])) ? $_POST['importe'] : '';
+$gimporte = (isset($_POST['subtotal'])) ? $_POST['subtotal'] : '';
+
 $usuario = (isset($_POST['nameuser'])) ? $_POST['nameuser'] : '';
 $tokenid = (isset($_POST['tokenid'])) ? $_POST['tokenid'] : '';
 
 $opcion = (isset($_POST['opcion'])) ? $_POST['opcion'] : '';
+
 $res = 0;
 
 switch ($opcion) {
     case 1: //alta detalle tmp
-        $consulta = "UPDATE cxp_detalle set fecha='$fecha',id_prov='$id_prov',nom_prov='$proveedor',id_proyecto='$id_proy',nom_proy='$proyecto',concepto='$concepto',
-        total='$total',activo='1' WHERE folio_ord='$folio'";
+        
+        $consulta = "INSERT INTO detalletmp ('foliotmp,id_item,descripcion,tipo,cantidad,precio,importe,descuento,gimporte')
+        VALUES ('$folio','$idconcepto','$concepto','$unidad','$cantidad','$precio','$desc','$importe','$gimporte')";
         $resultado = $conexion->prepare($consulta);
         $resultado->execute();
-        $res = 1;
-        break;
-    case 2: //modificación
-        
          
-    case 3://baja
-                             
+        $consulta = "SELECT * FROM detalletmp ORDER BY id_reg DESC LIMIT 1";
+        $resultado = $conexion->prepare($consulta);
+        $resultado->execute();
+        $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
+
+        break;
+    case 2: //borrar detalle
+            
         break;        
 }
 

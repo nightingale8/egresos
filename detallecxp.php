@@ -258,7 +258,7 @@ $datap = $resultadop->fetchAll(PDO::FETCH_ASSOC);
 
                                         <div class="form-group">
                                             <label for="concepto" class="col-form-label">Concepto:</label>
-                                            <textarea rows="1" class="form-control" name="concepto" id="concepto"><?php //echo $concepto; 
+                                            <textarea rows="1" class="form-control" name="concepto" id="concepto"><?php echo $concepto; 
                                                                                                                     ?></textarea>
                                         </div>
 
@@ -312,7 +312,7 @@ $datap = $resultadop->fetchAll(PDO::FETCH_ASSOC);
 
                                                                     <input type="hidden" class="form-control" name="idconcepto" id="idconcepto">
 
-                                                                <!--    <input type="hidden" class="form-control" name="claveconcepto" id="claveconcepto"> -->
+                                                                    <input type="hidden" class="form-control" name="claveconcepto" id="claveconcepto">
 
 
                                                                     <label for="nomconcepto" class="col-form-label">Concepto:</label>
@@ -402,19 +402,23 @@ $datap = $resultadop->fetchAll(PDO::FETCH_ASSOC);
                                                             <table name="tablaDetIndes" id="tablaDetIndes" class="table table-sm table-striped table-bordered table-condensed text-nowrap mx-auto" style="width:100%;font-size:15px">
                                                                 <thead class="text-center bg-gradient-secondary">
                                                                     <tr>
-                                                                        <th>Id</th>
+                                                                        <th>IdReg</th>
+                                                                        <th>FolioTmp</th>
                                                                         <th>Clave</th>
                                                                         <th>Concepto </th>
                                                                         <th>Cantidad</th>
                                                                         <th>Tipo</th>
                                                                         <th>Precio U.</th>
+                                                                        <th>Total</th>
+                                                                        <th>Desc</th>
                                                                         <th>Importe</th>
+                                                                        <th>Estado</th>
                                                                         <th>Acciones</th>
-                                                                    </tr>
+                                                                    
                                                                 </thead>
                                                                 <tbody>
                                                                     <?php
-                                                                    $consultadeto = "SELECT * FROM vdetalle_cxptmp where folio_cxp='$folio' and estado_reg=1 order by id_reg";
+                                                                    $consultadeto = "SELECT * FROM detalletmp where foliotmp='$folio' and estado_reg=1 order by id_reg";
                                                                     $resultadodeto = $conexion->prepare($consultadeto);
                                                                     $resultadodeto->execute();
                                                                     $datadeto = $resultadodeto->fetchAll(PDO::FETCH_ASSOC);
@@ -422,13 +426,16 @@ $datap = $resultadop->fetchAll(PDO::FETCH_ASSOC);
                                                                     ?>
                                                                         <tr>
                                                                             <td><?php echo $rowdet['id_reg'] ?></td>
-
+                                                                            <td><?php echo $rowdet['foliotmp'] ?></td>
                                                                             <td><?php echo $rowdet['id_item'] ?></td>
                                                                             <td><?php echo $rowdet['descripcion'] ?></td>
-                                                                            <td><?php echo $rowdet['cantidad'] ?></td>
                                                                             <td><?php echo $rowdet['tipo'] ?></td>
+                                                                            <td><?php echo $rowdet['cantidad'] ?></td>
                                                                             <td class="text-right"><?php echo number_format($rowdet['precio'], 2) ?></td>
+                                                                            <td class="text-right"><?php echo number_format($rowdet['importe'], 2) ?></td>
+                                                                            <td><?php echo $rowdet['descuento'] ?></td>
                                                                             <td class="text-right"><?php echo number_format($rowdet['gimporte'], 2) ?></td>
+                                                                            <td><?php echo $rowdet['estado_reg'] ?></td>
                                                                             <td></td>
                                                                         </tr>
                                                                     <?php

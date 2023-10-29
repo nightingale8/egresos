@@ -1,9 +1,9 @@
 $(document).ready(function () {
     $('[data-toggle="tooltip"]').tooltip()
 
-    var id, opcion
+    var idreg,opcion, tipooperacion
     var operacion = $('#opcion').val()
-
+   
     var textopermiso = permisos()
 
     function permisos() {
@@ -87,6 +87,11 @@ $(document).ready(function () {
                 data: null,
                 defaultContent: textopermiso,
             },
+            { className: "hide_column", targets: [0] },
+            { className: "hide_column", targets: [1] },
+            { className: "hide_column", targets: [7] },
+            { className: "hide_column", targets: [8] },
+            { className: "hide_column", targets: [10] },
         ],
 
         language: {
@@ -106,7 +111,7 @@ $(document).ready(function () {
             sProcessing: 'Procesando...',
         },
 
-        rowCallback: function (row, data) {
+       /* rowCallback: function (row, data) {
             $($(row).find('td')[3]).addClass('text-right')
             val = numeral(data[3]).format('0,0.00')
 
@@ -122,7 +127,7 @@ $(document).ready(function () {
 
             $($(row).find('td')[6]).addClass('text-right')
             $($(row).find('td')[6]).text(val3)
-        },
+        },*/
     })
 
     //TABLA DESECHABLE
@@ -314,13 +319,14 @@ $(document).ready(function () {
         $('#nomconcepto').val(concepto)
         $('#unidadm').val(unidad)
         $('#costou').val(precio)
+        
 
 
 
         $('#cantidadconcepto').prop('disabled', false)
-
+        
         $('#modalDes').modal('hide')
-
+        
     })
 
 
@@ -360,11 +366,13 @@ $(document).ready(function () {
 
         var gimporte = importe - (importe * (desc / 100));
         $('#subtotal').val(gimporte);
+        
         console.log(precio)
         console.log(cantidad)
         console.log(desc)
         console.log(importe)
         console.log(gimporte)
+        
     }
 
     //BOTON LIMPIAR DESECHABLE
@@ -373,55 +381,81 @@ $(document).ready(function () {
     })
 
     //AGREGAR DESECHABLE DENTRO DEL CRUD REALIZAR UPDATE EN DETALLE TMP
-    $(document).on('click', '#btnagregarides', function () {
-        folio = $('#folio').val()
-        idcon = $('#idconcepto').val()
-        cantidad = $('#cantidadconcepto').val().replace(/,/g, '')
-        concepto = $('#nomconcepto').val()
-        unidad = $('#unidadm').val()
-        costo = $('#costou').val().replace(/,/g, '')
-        clave = $('#claveconcepto').val()
-        subtotal = parseFloat(costo) * parseFloat(cantidad)
-        usuario = $('#nameuser').val()
-        opcion = 1
+    $(document).on('click', '#btnagregarides', function (e) {
+        e.preventDefault();
+        idreg = null;
+        folio = $.trim($("#folio").val());
+        iditem = $.trim($("#idconcepto").val());
+        nomitem = $.trim($("#nomconcepto").val());
+        tipo = $.trim($("#unidadm").val());
+        cant = $.trim($("#cantidadconcepto").val());
+        costo = $.trim($("#costou").val().replace(/,/g, ''));//reemplaza todas las comas obtendra el valor sin comas
+        sub = $.trim($("#importe").val().replace(/,/g, ''));
+        descuento = $.trim($("#desc").val());
+        gsub = $.trim($("#subtotal").val().replace(/,/g, ''));
+        
 
+        opcion = 1//guardar detalle
+        console.log(folio);
+        console.log(iditem);
+        console.log(nomitem);
+        console.log(tipo);
+        console.log(cant);
+        console.log(costo);
+        console.log(sub);
+        console.log(descuento);
+        console.log(gsub);
         if (
             folio.length != 0 &&
-            idcon.length != 0 &&
-            cantidad.length != 0 &&
+            iditem.length != 0 &&
+            cant.length != 0 &&
             costo.length != 0
-        ) {
+            
+
+        ) 
+       
+        {
             $.ajax({
-                type: 'POST',
                 url: 'bd/detalleorden.php',
+                type: 'POST',
                 dataType: 'json',
                 //async: false,
                 data: {
+                    idreg: idreg,
                     folio: folio,
-                    idcon: idcon,
-                    cantidad: cantidad,
-                    concepto: concepto,
-                    opcion: opcion,
-                    usuario: usuario,
-                    subtotal,
-                    subtotal,
-                    unidad: unidad,
-                    clave: clave,
+                    iditem: iditem,
+                    nomitem: nomitem,
+                    tipo: tipo,
+                    cant: cant,
                     costo: costo,
+                    sub: sub,
+                    descuento: descuento,
+                    gsub: gsub,
+
+                    
+                    opcion: opcion
+                    
                 },
                 success: function (data) {
-                    id_reg = data[0].id_reg
-                    clave = data[0].clave
-                    concepto = data[0].concepto
-                    cantidad = data[0].cantidad
-                    unidad = data[0].unidad
-                    precio = data[0].precio
-                    subtotal = data[0].monto
+                    console.log(data);// Muestra la respuesta del servidor en la consola
+                    
+                    idreg =data[0].idreg;
+                    folio = data[0].folio;
+                    iditem = data[0].iditem;
+                    nomitem = data[0].nomitem;
+                    tipo = data[0].tipo;
+                    cant = data[0].cant;
+                    costo = data[0].costo;
+                    sub= data[0].sub;
+                    descuento= data[0].descuento;
+                    gsub = data[0].gsub;
 
                     tablaDetIndes.row
-                        .add([id_reg, clave, concepto, cantidad, unidad, precio, subtotal])
+                        .add([idreg,folio,iditem, nomitem, tipo, cant, costo,sub,descuento, gsub])
                         .draw()
-                    tipo = 4
+                        //muestra la suma de los subtotales de ides?
+                        //formate el total  con separadores de miles y dos decimales
+                    /* tipo = 4
                     $.ajax({
                         url: 'bd/sumadetalle.php',
                         type: 'POST',
@@ -436,9 +470,10 @@ $(document).ready(function () {
 
                             $('#total').val(valor)
                         },
-                    })
+                    }) */
                     limpiardes()
                 },
+                
             })
         } else {
             Swal.fire({
@@ -487,11 +522,12 @@ $(document).ready(function () {
     function limpiardes() {
         $('#idconcepto').val('')
         $('#nomconcepto').val('')
-        $('#claveconcepto').val('')
-        $('#cantidadconcepto').val('')
+        $('#unidadm').val('')
         $('#costou').val('')
-        $('#costou').prop('disabled', true)
-        $('#cantidadconcepto').prop('disabled', true)
+        $('#cantidadconcepto').val('')
+        $('#importe').val('')
+        $('#desc').val('')
+        $('#subtotal').val('')
     }
 
     function round(value, decimals) {
