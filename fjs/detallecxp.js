@@ -1,9 +1,11 @@
 $(document).ready(function () {
     $('[data-toggle="tooltip"]').tooltip()
 
-    var idreg,opcion, tipooperacion
+    var id, opcion, tipooperacion, id_reg
+
+    var fila;
     var operacion = $('#opcion').val()
-   
+
     var textopermiso = permisos()
 
     function permisos() {
@@ -76,58 +78,59 @@ $(document).ready(function () {
 
     //TABLA DETALLE DE desechables
     tablaDetIndes = $('#tablaDetIndes').DataTable({
-        paging: false,
-        ordering: false,
-        info: false,
-        searching: false,
+        "paging": false,
+        "ordering": false,
+        "info": false,
+        "searching": false,
 
-        columnDefs: [
+        "columnDefs": [
             {
-                targets: -1,
-                data: null,
-                defaultContent: textopermiso,
+                "targets": -1,
+                "data": null,
+                "defaultContent": textopermiso,
             },
             { className: "hide_column", targets: [0] },
             { className: "hide_column", targets: [1] },
             { className: "hide_column", targets: [7] },
             { className: "hide_column", targets: [8] },
-            { className: "hide_column", targets: [10] },
+
         ],
 
-        language: {
-            lengthMenu: 'Mostrar _MENU_ registros',
-            zeroRecords: 'No se encontraron resultados',
-            info:
+        "language": {
+            "lengthMenu": 'Mostrar _MENU_ registros',
+            "zeroRecords": 'No se encontraron resultados',
+            "info":
                 'Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros',
-            infoEmpty: 'Mostrando registros del 0 al 0 de un total de 0 registros',
-            infoFiltered: '(filtrado de un total de _MAX_ registros)',
-            sSearch: 'Buscar:',
-            oPaginate: {
-                sFirst: 'Primero',
-                sLast: 'Último',
-                sNext: 'Siguiente',
-                sPrevious: 'Anterior',
+            "infoEmpty": 'Mostrando registros del 0 al 0 de un total de 0 registros',
+            "infoFiltered": '(filtrado de un total de _MAX_ registros)',
+            "sSearch": 'Buscar:',
+            "oPaginate": {
+                "sFirst": 'Primero',
+                "sLast": 'Último',
+                "sNext": 'Siguiente',
+                "sPrevious": 'Anterior',
             },
-            sProcessing: 'Procesando...',
+            "sProcessing": 'Procesando...',
         },
 
-       /* rowCallback: function (row, data) {
-            $($(row).find('td')[3]).addClass('text-right')
-            val = numeral(data[3]).format('0,0.00')
+        rowCallback: function (row, data) {
 
 
-            $($(row).find('td')[3]).text(val)
-
-            val2 = numeral(data[5]).format('0,0.00')
-
-            $($(row).find('td')[5]).addClass('text-right')
-            $($(row).find('td')[5]).text(val2)
-
-            val3 = numeral(data[6]).format('0,0.00')
+            val1 = numeral(data[6]).format('0,0.00')
 
             $($(row).find('td')[6]).addClass('text-right')
-            $($(row).find('td')[6]).text(val3)
-        },*/
+            $($(row).find('td')[6]).text(val1)
+
+            val2 = numeral(data[7]).format('0,0.00')
+
+            $($(row).find('td')[7]).addClass('text-right')
+            $($(row).find('td')[7]).text(val2)
+
+            val3 = numeral(data[9]).format('0,0.00')
+
+            $($(row).find('td')[9]).addClass('text-right')
+            $($(row).find('td')[9]).text(val3)
+        },
     })
 
     //TABLA DESECHABLE
@@ -303,6 +306,9 @@ $(document).ready(function () {
     //BOTON BUSCAR DESECHABLE
     $(document).on('click', '#btnInsumodes', function () {
         $('#modalDes').modal('show')
+        id = null;
+
+
     })
 
     // SELECCIONAR  DESECHABLE
@@ -319,14 +325,14 @@ $(document).ready(function () {
         $('#nomconcepto').val(concepto)
         $('#unidadm').val(unidad)
         $('#costou').val(precio)
-        
+
 
 
 
         $('#cantidadconcepto').prop('disabled', false)
-        
+
         $('#modalDes').modal('hide')
-        
+
     })
 
 
@@ -366,13 +372,7 @@ $(document).ready(function () {
 
         var gimporte = importe - (importe * (desc / 100));
         $('#subtotal').val(gimporte);
-        
-        console.log(precio)
-        console.log(cantidad)
-        console.log(desc)
-        console.log(importe)
-        console.log(gimporte)
-        
+
     }
 
     //BOTON LIMPIAR DESECHABLE
@@ -381,109 +381,138 @@ $(document).ready(function () {
     })
 
     //AGREGAR DESECHABLE DENTRO DEL CRUD REALIZAR UPDATE EN DETALLE TMP
-    $(document).on('click', '#btnagregarides', function (e) {
-        e.preventDefault();
-        idreg = null;
+    $("#btnagregarides").click(function () {
+        id_reg = $('#id_reg').val()
         folio = $.trim($("#folio").val());
-        iditem = $.trim($("#idconcepto").val());
-        nomitem = $.trim($("#nomconcepto").val());
-        tipo = $.trim($("#unidadm").val());
-        cant = $.trim($("#cantidadconcepto").val());
-        costo = $.trim($("#costou").val().replace(/,/g, ''));//reemplaza todas las comas obtendra el valor sin comas
-        sub = $.trim($("#importe").val().replace(/,/g, ''));
-        descuento = $.trim($("#desc").val());
-        gsub = $.trim($("#subtotal").val().replace(/,/g, ''));
-        
+        idconcepto = $.trim($("#idconcepto").val());
+        nomconcepto = $.trim($("#nomconcepto").val());
+        unidad = $("#unidadm").val();
+        cantidad = $.trim($("#cantidadconcepto").val());
+        costo = $.trim($("#costou").val());//reemplaza todas las comas obtendra el valor sin comas
+        importe = $.trim($("#importe").val().replace(/,/g, ''));
+        desc = $.trim($("#desc").val());
+        subtotal = $.trim($("#subtotal").val().replace(/,/g, ''));
 
-        opcion = 1//guardar detalle
-        console.log(folio);
-        console.log(iditem);
-        console.log(nomitem);
-        console.log(tipo);
-        console.log(cant);
-        console.log(costo);
-        console.log(sub);
-        console.log(descuento);
-        console.log(gsub);
+        opcion = 1;//alta detalle item
+
+
+
         if (
-            folio.length != 0 &&
-            iditem.length != 0 &&
-            cant.length != 0 &&
-            costo.length != 0
-            
+            folio.length == 0 &&
+            idconcepto.length == 0 &&
+            cantidad.length == 0 &&
+            costo.length == 0
 
-        ) 
-       
-        {
+        ) {
+            Swal.fire({
+                title: 'Datos Faltantes',
+                text: "Debe ingresar todos los datos del Item",
+                icon: 'warning',
+            })
+            return false;
+        } else {
             $.ajax({
                 url: 'bd/detalleorden.php',
                 type: 'POST',
                 dataType: 'json',
                 //async: false,
                 data: {
-                    idreg: idreg,
+                    id_reg: id_reg,
                     folio: folio,
-                    iditem: iditem,
-                    nomitem: nomitem,
-                    tipo: tipo,
-                    cant: cant,
-                    costo: costo,
-                    sub: sub,
-                    descuento: descuento,
-                    gsub: gsub,
+                    idconcepto: idconcepto,
+                    nomconcepto: nomconcepto,
 
-                    
-                    opcion: opcion
-                    
+                    unidad: unidad,
+                    cantidad: cantidad,
+                    costo: costo,
+                    opcion: opcion,
+                    importe: importe,
+                    desc: desc,
+                    subtotal: subtotal,
+
+
                 },
                 success: function (data) {
-                    console.log(data);// Muestra la respuesta del servidor en la consola
-                    
-                    idreg =data[0].idreg;
-                    folio = data[0].folio;
-                    iditem = data[0].iditem;
-                    nomitem = data[0].nomitem;
-                    tipo = data[0].tipo;
-                    cant = data[0].cant;
-                    costo = data[0].costo;
-                    sub= data[0].sub;
-                    descuento= data[0].descuento;
-                    gsub = data[0].gsub;
 
-                    tablaDetIndes.row
-                        .add([idreg,folio,iditem, nomitem, tipo, cant, costo,sub,descuento, gsub])
-                        .draw()
+
+                    console.log(data);// Muestra la respuesta del servidor en la consola
+                    //ya muestra el valor de data = 1
+                    id_reg = data[0].id_reg
+                    folio = data[0].folio
+                    idconcepto = data[0].idconcepto
+                    nomconcepto = data[0].nomconcepto
+                    unidad = data[0].unidad
+                    cantidad = data[0].cantidad
+                    costo = data[0].costo
+                    importe = data[0].importe
+                    desc = data[0].desc
+                    subtotal = data[0].subtotal
+
+                    if (data == 1) { //si data = 1 agregara la fila
+                        tablaDetIndes.row
+                            .add([folio, idconcepto, nomconcepto, unidad, cantidad, costo, importe, desc, subtotal])
+                            .draw()
+                            calcularTotalGimporte()
                         //muestra la suma de los subtotales de ides?
                         //formate el total  con separadores de miles y dos decimales
-                    /* tipo = 4
-                    $.ajax({
-                        url: 'bd/sumadetalle.php',
-                        type: 'POST',
-                        dataType: 'json',
-                        async: false,
-                        data: { folio: folio },
-                        success: function (data) {
-                            total = data
+                        tipo = 4
+                        $.ajax({
+                            url: 'bd/sumadetalle.php',
+                            type: 'POST',
+                            dataType: 'json',
+                            async: false,
+                            data: { foliotmp: foliotmp },
+                            success: function (data) {
+                                total = data
 
-                            var myNumeral = numeral(total)
-                            var valor = myNumeral.format('0,0.00')
+                                var myNumeral = numeral(total)
+                                var valor = myNumeral.format('0,0.00')
 
-                            $('#total').val(valor)
-                        },
-                    }) */
-                    limpiardes()
-                },
-                
+                                $('#total').val(valor)
+                            },
+                        })
+                        tablaDetIndes.row
+                            .add([folio, idconcepto, nomconcepto, unidad, cantidad, costo, importe, desc, subtotal])
+                            .draw()
+                            calcularTotalGimporte()
+                        limpiardes()
+                        calcularTotalGimporte()
+
+                    } else {
+                        Swal.fire({// data arroja que es igual a 0
+                            title: 'Hubo algun fallo',
+                            icon: 'error',
+                        })
+                    }
+
+
+
+                }
+
             })
-        } else {
-            Swal.fire({
-                title: 'Datos Faltantes',
-                text: 'Debe ingresar todos los datos del Item',
-                icon: 'warning',
-            })
-            return false
         }
     })
+    
+
+    function calcularTotalGimporte() {
+        var totalGimporte = 0;
+
+        // Iterar sobre todas las filas de la tabla
+        $('#tablaDetIndes tbody tr').change(function () {
+
+            // Obtener el valor de gimporte en esta fila
+            var gimporte = parseFloat($(this).find('td:eq(9)').text().replace(/,/g, ''));
+
+            // Sumar al total
+            totalGimporte += gimporte;
+        });
+
+        // Actualizar el valor en el campo total
+        var myNumeral = numeral(totalGimporte);
+        var valorFormateado = myNumeral.format('0,0.00');
+        $('#total').val(valorFormateado);
+    }
+
 
     function limpiar() {
         var today = new Date()
@@ -535,23 +564,26 @@ $(document).ready(function () {
     }
 
     // BORRAR MATERIAL
+    
     $(document).on('click', '.btnBorrar', function (e) {
         e.preventDefault()
         fila = $(this)
         folio = $('#folio').val()
-        id = parseInt($(this).closest('tr').find('td:eq(0)').text())
+        id_reg = parseInt($(this).closest('tr').find('td:eq(0)').text())
         usuario = $('#nameuser').val()
-
-        tipooperacion = 2
+        $("#id_reg").val(id_reg);
+        opcion = 2
 
         $.ajax({
             type: 'POST',
             url: 'bd/detalleorden.php',
             dataType: 'json',
-            data: { id: id, opcion: tipooperacion, folio: folio },
+            data: { id_reg: id_reg, opcion: opcion, folio: folio },
             success: function (data) {
+                console.log(data)
                 if (data == 1) {
                     tablaDetIndes.row(fila.parents('tr')).remove().draw()
+                    calcularRestaGimporte()
                     tipo = 4
                     $.ajax({
                         url: 'bd/sumadetalle.php',

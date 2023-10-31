@@ -75,6 +75,13 @@ $resultadop = $conexion->prepare($consultap);
 $resultadop->execute();
 $datap = $resultadop->fetchAll(PDO::FETCH_ASSOC);
 
+$consultaImp = "SELECT SUM(gimporte) as importeT FROM detalletmp where foliotmp='$folio'";
+$resultadoImp = $conexion->prepare($consultaImp);
+$resultadoImp->execute();
+$dataImp = $resultadoImp->fetchAll(PDO::FETCH_ASSOC);
+foreach ($dataImp as $dti){
+    $totalImporte = $dti['importeT'];
+}
 
 ?>
 
@@ -299,7 +306,7 @@ $datap = $resultadop->fetchAll(PDO::FETCH_ASSOC);
                                                     <div class="card-header " style="margin:0px;padding:8px;">
 
                                                         <button type="button" class="btn bg-gradient-secondary btn-sm" data-card-widget="collapse" data-toggle="tooltip" title="Buscar Item">
-                                                            Agregar Concepto <i class="fas fa-plus"></i>
+                                                            Agregar Item <i class="fas fa-plus"></i>
                                                         </button>
 
                                                     </div>
@@ -309,10 +316,11 @@ $datap = $resultadop->fetchAll(PDO::FETCH_ASSOC);
 
                                                             <div class="col-lg-5">
                                                                 <div class="input-group input-group-sm">
-
-                                                                    <input type="hidden" class="form-control" name="idconcepto" id="idconcepto">
-
-                                                                    <input type="hidden" class="form-control" name="claveconcepto" id="claveconcepto">
+                                                                    <input type="hidden" class="form-control" name="id_reg" id="id_reg" disabled>
+                                                                    <br>
+                                                                    <input type="hidden" class="form-control" name="idconcepto" id="idconcepto" disabled>
+                                                                    <br>
+                                                                    <input type="hidden" class="form-control" name="claveconcepto" id="claveconcepto" >
 
 
                                                                     <label for="nomconcepto" class="col-form-label">Concepto:</label>
@@ -377,7 +385,7 @@ $datap = $resultadop->fetchAll(PDO::FETCH_ASSOC);
                                                                 <label for="acciones" class="col-form-label">Acciones:</label>
                                                                 <div class="">
                                                                     <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="Agregar Item">
-                                                                        <button type="button" id="btnagregarides" name="btnagregarides" class="btn btn-sm bg-gradient-orange" value="btnGuardari"><i class="fas fa-plus-square"></i></button>
+                                                                        <button type="button" id="btnagregarides" name="btnagregarides" class="btn btn-success" value="btnagregarides"><i class="fas fa-plus-square"></i></button>
                                                                     </span>
 
                                                                     <span class="d-inline-block" tabindex="1" data-toggle="tooltip" title="Limpiar">
@@ -406,13 +414,12 @@ $datap = $resultadop->fetchAll(PDO::FETCH_ASSOC);
                                                                         <th>FolioTmp</th>
                                                                         <th>Clave</th>
                                                                         <th>Concepto </th>
-                                                                        <th>Cantidad</th>
                                                                         <th>Tipo</th>
+                                                                        <th>Cantidad</th>
                                                                         <th>Precio U.</th>
                                                                         <th>Total</th>
                                                                         <th>Desc</th>
                                                                         <th>Importe</th>
-                                                                        <th>Estado</th>
                                                                         <th>Acciones</th>
                                                                     
                                                                 </thead>
@@ -435,7 +442,6 @@ $datap = $resultadop->fetchAll(PDO::FETCH_ASSOC);
                                                                             <td class="text-right"><?php echo number_format($rowdet['importe'], 2) ?></td>
                                                                             <td><?php echo $rowdet['descuento'] ?></td>
                                                                             <td class="text-right"><?php echo number_format($rowdet['gimporte'], 2) ?></td>
-                                                                            <td><?php echo $rowdet['estado_reg'] ?></td>
                                                                             <td></td>
                                                                         </tr>
                                                                     <?php
@@ -467,7 +473,7 @@ $datap = $resultadop->fetchAll(PDO::FETCH_ASSOC);
                                         <div class="form-group">
                                             <label for="total" class="col-form-label">Total $:</label>
 
-                                            <input type="text" class="form-control" name="total" id="total" disabled>
+                                            <input type="text" class="form-control" name="total" id="total" value="<?php echo number_format($totalImporte, 2); ?>" onkeypress="return filterFloat(event,this);"disabled>
                                         </div>
                                     </div>
                                     <div class="col-sm-2">
@@ -501,7 +507,7 @@ $datap = $resultadop->fetchAll(PDO::FETCH_ASSOC);
                                                 </span>
                                             </div>
 
-                                            <input type="text" class="form-control text-right" name="total" id="total" value="<?php echo number_format($total, 2); ?>" onkeypress="return filterFloat(event,this);" disabled>
+                                            <input type="text" class="form-control text-right" name="gtotal" id="gtotal" value="<?php echo number_format($total, 2); ?>" onkeypress="return filterFloat(event,this);" disabled>
                                         </div>
 
                                     </div>
